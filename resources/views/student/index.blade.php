@@ -15,21 +15,12 @@
             </div>
         </div>
 
-        <!-- Show Success Message -->
-
+        <!-- Show Message -->
         <div class="row">
             <div class="col-12">
-                @if (Session('success'))
-                    <div class="alert alert-primary alert-dismissible fade show" role="alert">
-                        {!! Session('success') !!}
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                @endif
+                @include('layouts.components.message')
             </div>
         </div>
-
 
         <!-- /Page Header -->
         <div class="row">
@@ -41,58 +32,52 @@
                                 <table class="datatable table table-hover table-center mb-0">
                                     <thead>
                                         <tr>
-                                            <th>Patient ID</th>
-                                            <th>Patient Name</th>
-                                            <th>Age</th>
-                                            <th>Address</th>
+                                            <th>ID</th>
+                                            <th>Student Name</th>
+                                            <th>Email</th>
                                             <th>Phone</th>
-                                            <th>Last Visit</th>
-                                            <th class="text-right">Paid</th>
+                                            <th>Student Id</th>
+                                            <th>Address</th>
+                                            <th>Photo</th>
+                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @foreach($studentsAll as $student)
                                         <tr>
-                                            <td>#PT001</td>
+                                            <td>{{ $loop -> iteration; }}</td>
+                                            <td>{{ $student -> st_name }}</td>
+                                            <td>{{ $student -> email }}</td>
+                                            <td>{{ $student -> phone }}</td>
+                                            <td>{{ $student -> student_id }}</td>
+                                            <td>
+                                                {{ $student -> address }}
+                                                <!-- {{ \Carbon\Carbon::parse($student -> created_at) -> diffForHumans() }} -->
+                                            </td>
                                             <td>
                                                 <h2 class="table-avatar">
-                                                    <a href="profile.html" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle" src="assets/img/patients/patient1.jpg" alt="User Image"></a>
-                                                    <a href="profile.html">Charlene Reed </a>
+                                                    @if($student -> photo != null)
+                                                    <img class="avatar-img rounded-circle" src="{{ asset('media/students/'. $student -> photo) }}" alt="User Image" style="width:60px; height:60px; object-fit:cover;">
+                                                    @else
+                                                    <img class="avatar-img rounded-circle" src="https://placehold.jp/60x80.png?text=Photo" style="width:60px; height:60px; object-fit:cover;" alt="">
+                                                    @endif
                                                 </h2>
                                             </td>
-                                            <td>29</td>
-                                            <td>4417 Goosetown Drive, Taylorsville, North Carolina, 28681</td>
-                                            <td>8286329170</td>
-                                            <td>20 Oct 2019</td>
-                                            <td class="text-right">$100.00</td>
-                                        </tr>
-                                        <tr>
-                                            <td>#PT002</td>
-                                            <td>
-                                                <h2 class="table-avatar">
-                                                    <a href="profile.html" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle" src="assets/img/patients/patient2.jpg" alt="User Image"></a>
-                                                    <a href="profile.html">Travis Trimble </a>
-                                                </h2>
+                                            <td class="text-right">
+                                                <div class="actions">
+                                                    <a class="btn btn-sm bg-success-light" href="{{ route('student.show', $student -> id) }}">
+                                                        <i class="fe fe-eye"></i> Show
+                                                    </a>
+                                                    <a class="btn btn-sm bg-warning-light mx-2" href="{{ route('student.edit', $student -> id) }}">
+                                                        <i class="fe fe-pencil"></i> Edit
+                                                    </a>
+                                                    <a class="btn btn-sm bg-danger-light deleteBtn" data-id="{{ 'student/'. $student -> id }}" data-toggle="modal" href="#delete_modal">
+                                                        <i class="fe fe-trash"></i> Delete
+                                                    </a>
+                                                </div>
                                             </td>
-                                            <td>23</td>
-                                            <td>4026 Fantages Way, Brunswick, Maine, 04011</td>
-                                            <td>2077299974</td>
-                                            <td>22 Oct 2019</td>
-                                            <td class="text-right">$200.00</td>
                                         </tr>
-                                        <tr>
-                                            <td>#PT003</td>
-                                            <td>
-                                                <h2 class="table-avatar">
-                                                    <a href="profile.html" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle" src="assets/img/patients/patient3.jpg" alt="User Image"></a>
-                                                    <a href="profile.html">Carl Kelly</a>
-                                                </h2>
-                                            </td>
-                                            <td>29</td>
-                                            <td>2037 Pearcy Avenue, Decatur, Indiana, 46733</td>
-                                            <td>2607247769</td>
-                                            <td>21 Oct 2019</td>
-                                            <td class="text-right">$250.00</td>
-                                        </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>
@@ -104,5 +89,27 @@
     </div>
 </div>
 <!-- /Page Wrapper -->
+
+<!-- Delete Modal -->
+<div class="modal fade" id="delete_modal" aria-hidden="true" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document" >
+        <div class="modal-content">
+            <div class="modal-body">
+                <form id="deleteForm" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <div class="form-content p-2">
+                        <h4 class="modal-title">Delete</h4>
+                        <p class="mb-4">Are you sure want to delete?</p>
+                        <p id="getId"></p>
+                        <button type="button" class="btn btn-danger mr-2" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary ml-2">Delete! </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Delete Modal -->
 
 @endsection

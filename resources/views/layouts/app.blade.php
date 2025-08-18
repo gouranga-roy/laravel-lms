@@ -12,6 +12,9 @@
 		
 		<!-- Bootstrap CSS -->
         <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
+
+        <!-- Datatables CSS -->
+		<link rel="stylesheet" href="{{ asset('assets/plugins/datatables/datatables.min.css') }}">
 		
 		<!-- Fontawesome CSS -->
         <link rel="stylesheet" href="{{ asset('assets/css/font-awesome.min.css') }}">
@@ -60,6 +63,10 @@
 		
 		<!-- Slimscroll JS -->
         <script src="{{ asset('assets/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
+
+        <!-- Datatables JS -->
+		<script src="{{ asset('assets/plugins/datatables/jquery.dataTables.min.js') }}"></script>
+		<script src="{{ asset('assets/plugins/datatables/datatables.min.js') }}"></script>
 		
 		<script src="{{ asset('assets/plugins/raphael/raphael.min.js') }}"></script>    
 		<script src="{{ asset('assets/plugins/morris/morris.min.js') }}"></script>  
@@ -67,6 +74,16 @@
 		
 		<!-- Custom JS -->
 		<script  src="{{ asset('assets/js/script.js') }}"></script>
+
+        <script>
+         $(document).ready(function() {
+               $('.deleteBtn').click(function() {
+                var delId = $(this).data('id');
+                var url = "{{ url(('')) }}/" + delId;
+                $('#deleteForm').attr('action', url);  
+            });
+        });
+        </script>
 		
     </body>
 </html>

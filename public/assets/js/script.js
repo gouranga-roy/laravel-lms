@@ -233,7 +233,38 @@ Version      : 1.0
 			}
 			return false;
 		}
-	});
+    });
+
+    // Input type file and priview Image
+    document.getElementById("prifileImg").addEventListener("change", function (event) {
+        let photo = event.target.files[0]; 
+        
+        if (photo) {
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('previewImg').src = e.target.result;
+            } 
+            reader.readAsDataURL(photo);
+        } else {
+            document.getElementById('preview').src = 'default.jpg';  
+        }
+    })
+    
+    // Delete Form With Data Id
+    // $(document).on('click', '.deleteBtn', function () {
+    //     var deleteId = $(this).data('id');
+    //     var url = "{{ url('student.delete') }}/" + deleteId;
+    //     $('#deleteForm').attr('action', url);
+    // });
+
+
+
+         
+    
+    
 
 	
 })(jQuery);
+
+ 
+  

@@ -7,10 +7,10 @@
         <div class="page-header">
             <div class="row">
                 <div class="col-sm-6">
-                    <h3 class="page-title">All Books</h3>
+                    <h3 class="page-title">All Borrowing</h3>
                 </div>
                 <div class="col-sm-6 text-right">
-                    <a href="{{ route('book.create') }}" class="btn btn-primary btn-md">Add New Book</a>
+                    <a href="{{ route('borrow.search') }}" class="btn btn-primary btn-md">Add New Borrowing</a>
                 </div>
             </div>
         </div>
@@ -33,42 +33,32 @@
                                     <thead>
                                         <tr>
                                             <th>ID</th>
-                                            <th>Cover</th>
+                                            <th>Student Name</th>
                                             <th>Book Name</th>
-                                            <th>Author</th>
-                                            <th>Isbn</th>
-                                            <th>Copies</th>
-                                            <th>Available Copy</th>
+                                            <th>Issue Date</th>
+                                            <th>Return Date</th>
+                                            <th>Status</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach($booksAll as $book)
+                                        @foreach($borrows as $item)
                                         <tr>
                                             <td>{{ $loop -> iteration; }}</td>
-                                            <td>
-                                                <h2 class="table-avatar">
-                                                    @if($book -> cover != null)
-                                                    <img class="avatar-img" src="{{ asset('media/cover/'. $book -> cover) }}" alt="User Image" style="max-width:60px; height:auto; object-fit:cover;">
-                                                    @else
-                                                    <img src="https://placehold.jp/60x80.png?text=Cover" alt="">
-                                                    @endif
-                                                </h2>
-                                            </td>
-                                            <td>{{ $book -> b_name }}</td>
-                                            <td>{{ $book -> author }}</td>
-                                            <td>{{ $book -> isbn }}</td>
-                                            <td>{{ $book -> copies }}</td>
-                                            <td>{{ $book -> available_copy }}</td>
+                                            <td>{{ $item -> student_name }}</td>
+                                            <td>{{ $item -> book_name  }}</td>
+                                            <td>{{ $item -> issue_date }}</td>
+                                            <td>{{ $item -> return_date }}</td>
+                                            <td>{{ $item -> status }}</td>
                                             <td class="text-right">
                                                 <div class="actions">
-                                                    <a class="btn btn-sm bg-success-light" href="{{ route('book.show', $book -> id) }}">
+                                                    <a class="btn btn-sm bg-success-light" href="#">
                                                         <i class="fe fe-eye"></i> Show
                                                     </a>
-                                                    <a class="btn btn-sm bg-warning-light mx-2" href="{{ route('book.edit', $book -> id) }}">
+                                                    <a class="btn btn-sm bg-warning-light mx-2" href="#">
                                                         <i class="fe fe-pencil"></i> Edit
                                                     </a>
-                                                     <a class="btn btn-sm bg-danger-light deleteBtn" data-id="{{ 'book/'. $book -> id }}" data-toggle="modal" href="#delete_modal">
+                                                    <a class="btn btn-sm bg-danger-light deleteBtn" data-id="" data-toggle="modal" href="#delete_modal">
                                                         <i class="fe fe-trash"></i> Delete
                                                     </a>
                                                 </div>

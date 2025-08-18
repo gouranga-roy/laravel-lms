@@ -12,7 +12,11 @@ class StudentController extends Controller
      */
     public function index()
     {
-        return view('student.index');
+        // Get All Students
+        $students_all = DB::table('students')->latest()->get();
+        return view('student.index', [
+            'studentsAll' => $students_all
+        ]);
     }
 
     /**
@@ -38,6 +42,9 @@ class StudentController extends Controller
             'photo'         => 'mimes:jpg,png,jpeg|max:1024'
         ]);
 
+        // Upload Student Image
+        $fileName = $this -> fileUpload($request -> file('photo'), 'media/students');
+
         // Store data form input
         DB::table('students')->insert([
             'st_name'       => $request->st_name,
@@ -45,12 +52,12 @@ class StudentController extends Controller
             'phone'         => $request->phone,
             'student_id'    => $request->student_id,
             'address'       => $request->address,
-            'photo'         => $request->photo,
+            'photo'         => $fileName,
             'created_at'    => now()
         ]);
 
         // Redirect home page and Success Message!
-        return redirect()->route('student.index')->with('success', 'Form data insert <strong>Successfully</strong>');
+        return redirect()->route('student.index')->with('success', 'Student insert <strong>Successfully</strong>');
     }
 
     /**
@@ -58,7 +65,11 @@ class StudentController extends Controller
      */
     public function show(string $id)
     {
-        return view('student.show');
+        // Get single student in DB
+        $studnet = DB::table('students')->where('id', $id)->first();
+        return view('student.show', [
+            'student' => $studnet
+        ]);
     }
 
     /**
@@ -66,7 +77,11 @@ class StudentController extends Controller
      */
     public function edit(string $id)
     {
-        return view('student.edit');
+        // Get single student in DB
+        $studnet = DB::table('students')->where('id', $id)->first();
+        return view('student.edit', [
+            'student' => $studnet
+        ]);
     }
 
     /**
@@ -74,7 +89,43 @@ class StudentController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        // Form Validation
+        $request->validate([
+            'st_name'       => 'required|max:100',
+            'phone'         => 'required', 'regex:/^(?:\+8801[3-9]\d{8}|01[3-9]\d{8})$/',
+            'address'       => 'nullable|max:250',
+            'photo'         => 'nullable|mimes:jpg,png,jpeg,avif|max:1024'
+        ]);
+
+
+        // Upload Student Image 
+        if($request->hasFile('photo')) {
+
+            $stPhoto = DB::table('students')->where('id', $id) -> first();
+
+            if( $stPhoto -> photo != null && file_exists(public_path('media/students/') . $stPhoto->photo ) )  {
+                unlink(public_path('media/students/') . $stPhoto->photo);
+            };
+
+            $fileName = $this -> fileUpload($request -> file('photo'), 'media/students');
+            
+            DB::table('students')->where('id', $id)->update([ 
+                'photo'         => $fileName, 
+            ]);
+
+        };
+
+         
+        DB::table('students')->where('id', $id)->update([
+            'st_name'       => $request->st_name,
+            'phone'         => $request->phone,
+            'address'       => $request->address, 
+            'updated_at'    => now()
+        ]);
+
+    
+        // Redirect home page and Success Message!
+        return redirect()->route('student.index')->with('success', 'Student Update <strong>Successfully</strong>');
     }
 
     /**
@@ -82,6 +133,9 @@ class StudentController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        DB::table('students')->where('id', $id)->delete();
+
+        // Redirect home page and Success Message!
+        return redirect()->route('student.index')->with('success', 'Student Delete <strong>Successfully</strong>');
     }
 }

@@ -1717,6 +1717,16 @@ html.menu-opened body {
     background-color: #00d0f1;
     color: #fff;
 }
+.sidebar-menu li a.link-active {
+    color: #ddd;
+    font-size: 16px;
+    font-weight: 500;
+    text-decoration: underline;
+}
+.sidebar-menu li.submenu > a.active {
+    background-color: #00d0f1;
+    color: #fff;
+}
 .menu-title {
     color: #ebebeb;
     display: flex;
@@ -3572,8 +3582,9 @@ table.table-inbox tbody tr.checked {
 }
 .profile-header img {
     height: auto;
-    max-width: 120px;
     width: 120px;
+    height: 120px;
+    object-fit: cover;
 }
 .profile-tab-cont {
 	padding-top: 1.875rem;
