@@ -39,27 +39,15 @@
                         <form action="{{ route('borrow.student') }}" method="POST">
                             @csrf
                             <div class="form-group row">
-                                <label class="col-lg-3 col-form-label">Student ID</label>
+                                <label class="col-lg-3 col-form-label">Student ID / Email / Phone:</label>
                                 <div class="col-lg-9">
-                                    <input type="text" class="form-control" name="student_id" value="{{ old('student_id') }}">
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-lg-3 col-form-label">Email</label>
-                                <div class="col-lg-9">
-                                    <input type="email" class="form-control" name="email" value="{{ old('email') }}">
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-lg-3 col-form-label">Phone</label>
-                                <div class="col-lg-9">
-                                    <input type="text" class="form-control" name="phone" value="{{ old('phone') }}">
+                                    <input type="text" class="form-control" name="student_search">
                                 </div>
                             </div>
                             
                             <div class="form-group row">
                                 <div class="col-lg-3"></div>
-                                <div class="col-lg-9 text-right">
+                                <div class="col-lg-9">
                                     <button type="submit" class="btn btn-primary">Search</button>
                                 </div>
                             </div>

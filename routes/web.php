@@ -23,3 +23,5 @@ Route::post('/borrow-search-student', [BorrowController::class, 'searchStudentGe
 Route::post('/borrow-search-student', [BorrowController::class, 'searchStudent'])->name('borrow.student');
 
 Route::get('/borrow-assign/{id}', [BorrowController::class, 'borrowAssign'])->name('borrow.assign');
+
+Route::get('/borrow-make-return/{id}', [BorrowController::class, 'borrowReturned'])->name('borrow.returned');

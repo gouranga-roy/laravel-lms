@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('book_id') -> constrained() -> onDelete('cascade');
             $table->string('issue_date') -> default(now());
             $table->string('return_date');
-            $table->string('status') -> default('pading');
+            $table->string('status') -> default('panding');
             $table->timestamps();
         });
     }

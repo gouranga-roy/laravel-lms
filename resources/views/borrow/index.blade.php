@@ -33,34 +33,76 @@
                                     <thead>
                                         <tr>
                                             <th>ID</th>
-                                            <th>Student Name</th>
-                                            <th>Book Name</th>
+                                            <th>Student</th>
+                                            <th>Book</th>
                                             <th>Issue Date</th>
                                             <th>Return Date</th>
+                                            <th>Created At</th>
                                             <th>Status</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach($borrows as $item)
+                                        
+                                        @php
+                                            $days = ceil(\Carbon\Carbon::now()->diffInDays(\Carbon\Carbon::parse($item->return_date), false));
+
+                                            if ($days > 0) {
+                                                $return_date = abs($days) . ' ' . (abs($days) == 1 ? 'Day' : 'Days');
+                                            } elseif ($days === 0) {
+                                                $return_date = 'Today';
+                                            } else {
+                                                $return_date = $days . ' ' . ($days == 1 ? 'Day Left' : 'Days Left');
+                                            }
+
+
+                                        @endphp
+
+                                       
+
                                         <tr>
                                             <td>{{ $loop -> iteration; }}</td>
-                                            <td>{{ $item -> student_name }}</td>
-                                            <td>{{ $item -> book_name  }}</td>
-                                            <td>{{ $item -> issue_date }}</td>
-                                            <td>{{ $item -> return_date }}</td>
-                                            <td>{{ $item -> status }}</td>
-                                            <td class="text-right">
+                                            <td>
+                                                @if($item -> student_photo != null)
+                                                    <img class="avatar-img rounded-circle mr-2" src="{{ asset('media/students/'. $item -> student_photo) }}" alt="User Image" style="width:60px; height:60px; object-fit:cover;">
+                                                    @else
+                                                    <img class="avatar-img rounded-circle mr-2" src="https://placehold.jp/60x80.png?text=Photo" style="width:60px; height:60px; object-fit:cover;" alt="">
+                                                @endif
+
+                                                {{ $item -> student_name }}
+                                            </td>
+                                            <td>
+                                                @if($item -> book_cover != null)
+                                                    <img class="avatar-img mr-2" src="{{ asset('media/cover/'. $item -> book_cover) }}" alt="User Image" style="width:60px; object-fit:cover;">
+                                                    @else
+                                                    <img class="avatar-img mr-2" src="https://placehold.jp/60x80.png?text=Photo" style="width:60px; height:60px; object-fit:cover;" alt="">
+                                                @endif
+
+                                                {{ $item -> book_name  }}
+                                            </td>
+                                            <td>{{ date('d M, Y', strtotime($item -> issue_date)) }}</td>
+                                            <td> {{ $return_date }}</td>
+                                            <td>
+                                                @php
+                                                    $minutes = \Carbon\Carbon::parse($item -> created_at)->diffForHumans(\Carbon\Carbon::now());
+
+                                                @endphp
+                                                {{ $minutes }}
+                                            </td>
+                                            <td>
+                                                @if ($item -> status == "overdue" )
+                                                    <p class="badge badge-pill bg-danger inv-badge py-2">{{ $item -> status }}</p>
+                                                @elseif($item -> status == "panding")
+                                                    <p class="badge badge-pill bg-success inv-badge py-2">{{ $item -> status }}</p>
+                                                @elseif($item -> status == "returned") 
+                                                    <p class="badge badge-pill bg-warning inv-badge py-2">{{ $item -> status }}</p>
+                                                @endif
+                                            </td>
+                                            <td>
                                                 <div class="actions">
-                                                    <a class="btn btn-sm bg-success-light" href="#">
-                                                        <i class="fe fe-eye"></i> Show
-                                                    </a>
-                                                    <a class="btn btn-sm bg-warning-light mx-2" href="#">
-                                                        <i class="fe fe-pencil"></i> Edit
-                                                    </a>
-                                                    <a class="btn btn-sm bg-danger-light deleteBtn" data-id="" data-toggle="modal" href="#delete_modal">
-                                                        <i class="fe fe-trash"></i> Delete
-                                                    </a>
+                                                    <a class="btn btn-sm bg-warning mx-2" href="{{ route('borrow.returned', $item -> id ) }}">Make Return</a>
+                                                    <a class="btn btn-sm bg-danger text-white mx-2" href="#">Make Overdur</a>
                                                 </div>
                                             </td>
                                         </tr>

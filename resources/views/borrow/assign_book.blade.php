@@ -76,6 +76,14 @@
                                 <input type="date" name="return_date" class="form-control">
                                 <input type="hidden" name="student_id" value="{{ $student -> id }}" class="form-control">
                             </div>
+                            <div class="form-group">
+                                <label for="">Status</label>
+                                <select name="status" id="" class="form-control">
+                                    <option value="panding">Panding</option>
+                                    <option value="returned">Return</option>
+                                    <option value="overdue">Overdue</option>
+                                </select>
+                            </div>
                             <button type="submit" class="btn btn-primary">Assign Book</button>
                        </form>
                     </div>

@@ -68,7 +68,7 @@ class BookController extends Controller
     public function show(string $id)
     {
         // Get Single Id in book Table
-        $book = DB::table('books')->where('id', $id)->first();
+        $book = DB::table('books')->where('id', $id)->firstOrFail();
 
         return view('book.show', [
             'book' => $book

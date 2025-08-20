@@ -33,12 +33,12 @@
                                     <thead>
                                         <tr>
                                             <th>ID</th>
-                                            <th>Student Name</th>
+                                            <th>Student</th>
                                             <th>Email</th>
                                             <th>Phone</th>
                                             <th>Student Id</th>
                                             <th>Address</th>
-                                            <th>Photo</th>
+                                            <th>Created At</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -46,24 +46,31 @@
                                         @foreach($studentsAll as $student)
                                         <tr>
                                             <td>{{ $loop -> iteration; }}</td>
-                                            <td>{{ $student -> st_name }}</td>
-                                            <td>{{ $student -> email }}</td>
-                                            <td>{{ $student -> phone }}</td>
-                                            <td>{{ $student -> student_id }}</td>
                                             <td>
-                                                {{ $student -> address }}
-                                                <!-- {{ \Carbon\Carbon::parse($student -> created_at) -> diffForHumans() }} -->
-                                            </td>
-                                            <td>
-                                                <h2 class="table-avatar">
+                                                <h2 class="table-avatar pr-2">
                                                     @if($student -> photo != null)
                                                     <img class="avatar-img rounded-circle" src="{{ asset('media/students/'. $student -> photo) }}" alt="User Image" style="width:60px; height:60px; object-fit:cover;">
                                                     @else
                                                     <img class="avatar-img rounded-circle" src="https://placehold.jp/60x80.png?text=Photo" style="width:60px; height:60px; object-fit:cover;" alt="">
                                                     @endif
                                                 </h2>
+                                                {{ $student -> st_name }}
                                             </td>
-                                            <td class="text-right">
+                                            <td>{{ $student -> email }}</td>
+                                            <td>{{ $student -> phone }}</td>
+                                            <td>{{ $student -> student_id }}</td>
+                                            <td>
+                                                {{ $student -> address }}
+                                            </td>
+                                            <td>
+                                                @php
+                                                    $minutes = \Carbon\Carbon::parse($student -> created_at)->diffForHumans(\Carbon\Carbon::now());
+
+                                                @endphp
+                                                {{ $minutes }}
+
+                                            </td>
+                                            <td>
                                                 <div class="actions">
                                                     <a class="btn btn-sm bg-success-light" href="{{ route('student.show', $student -> id) }}">
                                                         <i class="fe fe-eye"></i> Show

@@ -33,12 +33,12 @@
                                     <thead>
                                         <tr>
                                             <th>ID</th>
-                                            <th>Cover</th>
-                                            <th>Book Name</th>
+                                            <th>Book</th>
                                             <th>Author</th>
                                             <th>Isbn</th>
                                             <th>Copies</th>
                                             <th>Available Copy</th>
+                                            <th>Created At</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -47,20 +47,28 @@
                                         <tr>
                                             <td>{{ $loop -> iteration; }}</td>
                                             <td>
-                                                <h2 class="table-avatar">
+                                                <h2 class="table-avatar pr-2">
                                                     @if($book -> cover != null)
                                                     <img class="avatar-img" src="{{ asset('media/cover/'. $book -> cover) }}" alt="User Image" style="max-width:60px; height:auto; object-fit:cover;">
                                                     @else
                                                     <img src="https://placehold.jp/60x80.png?text=Cover" alt="">
                                                     @endif
                                                 </h2>
+                                                {{ $book -> b_name }}
                                             </td>
-                                            <td>{{ $book -> b_name }}</td>
                                             <td>{{ $book -> author }}</td>
                                             <td>{{ $book -> isbn }}</td>
                                             <td>{{ $book -> copies }}</td>
                                             <td>{{ $book -> available_copy }}</td>
-                                            <td class="text-right">
+                                            <td>
+                                                @php
+                                                    $minutes = \Carbon\Carbon::parse($book -> created_at)->diffForHumans(\Carbon\Carbon::now());
+
+                                                @endphp
+                                                {{ $minutes }}
+
+                                            </td>
+                                            <td>
                                                 <div class="actions">
                                                     <a class="btn btn-sm bg-success-light" href="{{ route('book.show', $book -> id) }}">
                                                         <i class="fe fe-eye"></i> Show

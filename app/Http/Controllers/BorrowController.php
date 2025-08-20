@@ -12,14 +12,15 @@ class BorrowController extends Controller
      */
     public function index()
     {
-        // $borrows = DB::table('borrows') -> latest() -> get();
-        $borrows = DB::table('borrows') -> latest()
+        $borrows = DB::table('borrows') -> orderBy('return_date', 'asc')
                 ->join('students', 'borrows.student_id', '=', 'students.id')
                 ->join('books', 'borrows.book_id', '=', 'books.id')
                 ->select(
                     'borrows.*',
                     'students.st_name as student_name',
+                    'students.photo as student_photo',
                     'books.b_name as book_name',
+                    'books.cover as book_cover',
                 )
                 ->get();
 
@@ -45,6 +46,8 @@ class BorrowController extends Controller
             'student_id'    => $request -> student_id,
             'book_id'       => $request -> book_id,
             'return_date'   => $request -> return_date,
+            'status'        => $request -> status,
+            'issue_date'    => now(),
             'created_at'    => now(),
         ]);
 
@@ -64,7 +67,26 @@ class BorrowController extends Controller
      */
     public function edit(string $id)
     {
-        return view('borrow.edit');
+        $borrow = DB::table('borrows')
+                    -> join('students', 'borrows.student_id', '=' , 'students.id')
+                    -> join('books', 'borrows.book_id', '=', 'books.id')
+                    -> select(
+                        'borrows.*',
+                        'students.st_name as student_name',
+                        'students.photo as st_photo',
+                        'students.email as st_email',
+                        'students.address as st_address',
+                        'books.b_name as book_name'
+                    )
+                    -> where('borrows.id', $id)
+                    -> first();
+
+        $books = DB::table('books')->get();
+
+        return view('borrow.edit', [
+            'borrow' => $borrow,
+            'books'  => $books
+        ]);
     }
 
     /**
@@ -72,7 +94,16 @@ class BorrowController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        DB::table('borrows')->where('id', $id)->update([
+            'student_id'    => $request -> student_id,
+            'book_id'       => $request -> book_id,
+            'return_date'   => $request -> return_date,
+            'status'        => $request -> status,
+            'updated_at'    => now()
+        ]);
+
+        // Update data Borrows table
+        return back()->with('success','Data Update <strong>Successfully!</strong>');
     }
 
     /**
@@ -80,7 +111,10 @@ class BorrowController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        DB::table('borrows')->where('id', $id)->delete();
+
+        // Delete Successfully Message and Redirect Home page
+        return redirect(route('borrow.index'))->with('success', 'Borrowing Delete <strong>Successfully</strong>');
     }
 
     /**
@@ -102,11 +136,10 @@ class BorrowController extends Controller
      */
     public function searchStudent(Request $request) {
         $students = DB::table('students')
-                    ->where('student_id', $request->student_id)
-                    ->orWhere('email', $request->email)
-                    ->orWhere('phone', $request->phone)
+                    ->where('student_id', $request->student_search)
+                    ->orWhere('email', $request->student_search)
+                    ->orWhere('phone', $request->student_search)
                     ->get();
-
 
         return view('borrow.search_student', [
             'students' => $students,
@@ -127,6 +160,13 @@ class BorrowController extends Controller
             'student' => $student,
             'books' => $books
         ]);
+    }
+
+    /**
+     * Borrow Make Return
+     */
+    public function borrowReturned(string $id) {
+        return "Hello";
     }
 
 }
